@@ -24,6 +24,7 @@
             var storageRef = firebase.storage().ref(file.name);
             console.log('file + ' + file.name);
             var task = storageRef.put(file);
+            console.log("Upload complete");
             task.on('state_changed',
                 function progress(snapshot) {
                     var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -34,12 +35,25 @@
                     console.log(err);
                 },
                 function complete() {
-                    console.log("Upload complete");
-                    alert("Upload complete");
+                    alert("Upload process complete. Beginigng retrieval of URL");
+                    var fileName = window.AppInventor.getWebViewString();
+                    var storage = firebase.storage();
+                    var pathReference = storage.ref(fileName);
+                    console.log(pathReference.getDownloadURL());
+                    pathReference.getDownloadURL().then(function (url) {
+                        window.AppInventor.setWebViewString(url);
+                    });
+                    console.log("Retrieval of URL complete");
+                    alert("Upload totally complete");
                 }
 
             );
-        });  
+        });
+
+
+
+
+
     </script>
 </body>
 

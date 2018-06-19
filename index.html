@@ -2,20 +2,11 @@
 
 <body>
     <input type="file" id="fileButton" />
+    <progress value="0" max="100" id="uploader">0%</progress>
     <script src="https://www.gstatic.com/firebasejs/3.7.0/firebase.js"></script>
     <script>
         // Initialize Firebase
         var config = {
-            //     	<script>
-            // // Initialize Firebase
-            // var config = {
-            // 	apiKey: "AIzaSyC-pMGLqJZUEvexMM2pFiIuyGW4zbjH6Kk",
-            // 	authDomain: "lavanya-beauty-clinic-website.firebaseapp.com",
-            // 	databaseURL: "https://lavanya-beauty-clinic-website.firebaseio.com",
-            // 	projectId: "lavanya-beauty-clinic-website",
-            // 	storageBucket: "lavanya-beauty-clinic-website.appspot.com",
-            // 	messagingSenderId: "613959501953"
-            // };
 
             apiKey: "AIzaSyC-pMGLqJZUEvexMM2pFiIuyGW4zbjH6Kk",
             authDomain: "lavanya-beauty-clinic-website.firebaseapp.com",
@@ -30,9 +21,23 @@
         var fileButton = document.getElementById("fileButton");
         fileButton.addEventListener('change', function (e) {
             var file = e.target.files[0];
-            var storageRef = firebase.storage().ref(file.name);
+            var storageRef = firebase.storage().ref('uploads/' + file.name);
             console.log('file + ' + file.name);
-            storageRef.put(file);
+            var task = storageRef.put(file);
+            task.on('state_changed',
+                function progress(snapshot) {
+                    var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    uploader.value = percentage;
+
+                },
+                function error(err) {
+                    console.log(err);
+                },
+                function complete() {
+
+                }
+
+            );
         });  
     </script>
 </body>

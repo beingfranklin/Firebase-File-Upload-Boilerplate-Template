@@ -21,7 +21,7 @@
         var fileButton = document.getElementById("fileButton");
         fileButton.addEventListener('change', function (e) {
             var file = e.target.files[0];
-            var storageRef = firebase.storage().ref('uploads/' + file.name);
+            var storageRef = firebase.storage().ref(file.name);
             console.log('file + ' + file.name);
             var task = storageRef.put(file);
             task.on('state_changed',
@@ -34,7 +34,8 @@
                     console.log(err);
                 },
                 function complete() {
-
+                    console.log("Upload complete");
+                    alert("Upload complete");
                 }
 
             );

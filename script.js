@@ -9,16 +9,25 @@ var config = {
 };
 firebase.initializeApp(config);
 
-function makeid() {
-  var text = "";
-  var possible =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+function makeid(name) {
+  // Scraping file extension
+  parts = name.split(".");
+  name = parts[0];
+  fileextension = parts[1];
 
-  for (var i = 0; i < 5; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  //Creating a timestamp
+  var currentDate = new Date();
+
+  var date = currentDate.getDate();
+  var month = currentDate.getMonth(); //Note - January is 0 not 1
+  var year = currentDate.getFullYear();
+  var time = currentDate.getTime();
+
+  var timestamp = date + "-" + (month + 1) + "-" + year + "-" + time;
+  var newname = name + "_" + timestamp + fileextension;
+
   // Add function for checking for duplications HERE (if necessary)
-
-  return text;
+  return newname;
 }
 
 var fileButton = document.getElementById("fileButton");
@@ -33,7 +42,7 @@ fileButton.addEventListener("change", function(e) {
   //Its added to avoid replacing of the images with same name.
 
   // storageRef.child('/images/').put(file, metadata).then(function (snapshot) {
-  var randomfolder = makeid();
+  var randomfolder = makeid(file.name);
   storageRef
     .child("images/" + randomfolder)
     .put(file, metadata)

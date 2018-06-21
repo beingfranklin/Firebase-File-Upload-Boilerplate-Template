@@ -11,9 +11,9 @@ firebase.initializeApp(config);
 
 function makeid(name) {
   // Scraping file extension
-  parts = name.split(".");
-  name = parts[0];
-  fileextension = parts[1];
+
+  filename = name.substring(0, x.lastIndexOf("."));
+  fileextension = name.substring(x.lastIndexOf("."));
 
   //Creating a timestamp
   var currentDate = new Date();
@@ -24,7 +24,7 @@ function makeid(name) {
   var time = currentDate.getTime();
 
   var timestamp = date + "-" + (month + 1) + "-" + year + "-" + time;
-  var newname = name + "_" + timestamp + fileextension;
+  var newname = name + "_" + timestamp + "." + fileextension;
 
   // Add function for checking for duplications HERE (if necessary)
   return newname;

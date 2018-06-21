@@ -19,44 +19,58 @@
         firebase.initializeApp(config);
     </script>
     <script>
+        function makeid() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            for (var i = 0; i < 5; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            // Add function for checking for duplications HERE (if necessary)
+
+            return text;
+        }
+
         var fileButton = document.getElementById("fileButton");
         fileButton.addEventListener('change', function (e) {
             var file = e.target.files[0];
-            var storageRef = firebase.storage().ref(file.name);
+            var storageRef = firebase.storage().ref();
             var metadata = {
                 contentType: 'image/jpeg',
             };
 
 
 
-            // console.log('file + ' + file.name);
-            // var task = storageRef.put(file);
-            // console.log("Upload complete");
+
+
+
+            //here .child function is to create new folder(randomfolder) for uploading images. 
+            //Its added to avoid replacing of the images with same name.
 
             // storageRef.child('/images/').put(file, metadata).then(function (snapshot) {
-
-            storageRef.put(file, metadata).then(function (snapshot) {
+            var randomfolder = makeid();
+            storageRef.child('images/' + randomfolder).put(file, metadata).then(function (snapshot) {
                 console.log('Uploaded', snapshot.totalBytes, 'bytes.');
                 console.log(snapshot.metadata);
+
                 var url = snapshot.downloadURL;
+
                 console.log('File available at', url)
 
                 // [START_EXCLUDE]
                 document.getElementById('linkbox').innerHTML = '<a href="' + url + '">Click For File</a>';
 
-
                 //   Add URL to firebase 
-
                 var database = firebase.database();
-                var dataRef = database.ref("/Gallery" + "/").push();
+                var dataRef = database.ref("/Gallery/" + randomfolder)
                 //.ref('/newData/' + "nameOfNewParent");
                 console.log("url is " + url)
                 dataRef.set({
                     Name: "Heyy",
+                    Folder: randomfolder,
                     //Description and other stuff goes here
                     URL: url
                 });
-
+                //Ending Add URL section
 
                 // [END_EXCLUDE]
             }).catch(function (error) {

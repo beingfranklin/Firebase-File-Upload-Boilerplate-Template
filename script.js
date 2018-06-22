@@ -1,12 +1,5 @@
 // Initialize Firebase
-var config = {
-  apiKey: "AIzaSyC-pMGLqJZUEvexMM2pFiIuyGW4zbjH6Kk",
-  authDomain: "lavanya-beauty-clinic-website.firebaseapp.com",
-  databaseURL: "https://lavanya-beauty-clinic-website.firebaseio.com",
-  projectId: "lavanya-beauty-clinic-website",
-  storageBucket: "lavanya-beauty-clinic-website.appspot.com",
-  messagingSenderId: "613959501953"
-};
+var config = {};
 firebase.initializeApp(config);
 
 function makeid(name) {
@@ -24,7 +17,7 @@ function makeid(name) {
   var time = currentDate.getTime();
 
   var timestamp = date + "-" + (month + 1) + "-" + year + "-" + time;
-  var newname = filename + "_" + timestamp + "." + fileextension;
+  var newname = filename + "_" + timestamp + fileextension;
 
   // Add function for checking for duplications HERE (if necessary)
   return newname;
@@ -61,7 +54,9 @@ fileButton.addEventListener("change", function(e) {
 
       //   Add URL to firebase
       var database = firebase.database();
-      var dataRef = database.ref("/Gallery/" + randomfolder);
+      var dataRef = database.ref(
+        "/Gallery/" + randomfolder.substring(0, randomfolder.lastIndexOf("."))
+      );
       //.ref('/newData/' + "nameOfNewParent");
       console.log("url is " + url);
       dataRef.set({
@@ -73,7 +68,30 @@ fileButton.addEventListener("change", function(e) {
       //Ending Add URL to firebase section
 
       // [END_EXCLUDE]
+
+      // FETCH DATA
+
+      //   var db = firebase.database(); //firebase.firestore();
+      //   var docRef = db
+      //     .collection("Gallery")
+      //     .orderBy("name")
+      //     .get()
+      //     .then(querySnapshot => {
+      //       querySnapshot.forEach(doc => {
+      //         var name_val = doc.data().Name;
+      //         // var mname = doc.data().name;
+      //         // var address = doc.data().address;
+      //         console.log(name_val);
+      //       });
+      //     });
+      //
+
+      var ref = firebase.database().ref("Gallery");
+      ref.on("child_added", function(snapshot) {
+        console.log(snapshot.key);
+      });
     })
+
     .catch(function(error) {
       // [START onfailure]
       console.error("Upload failed:", error);
